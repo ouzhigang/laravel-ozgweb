@@ -1,0 +1,158 @@
+
+关于命令行
+php artisan make:command TestCommand
+
+$signature为命令名称，"test:go {param1}"param1为参数1，handle方法里面获取，$param1 = $this->argument('param1');
+$description为描述
+handle方法为命令逻辑
+
+
+
+
+
+
+
+
+
+
+
+
+
+关于定时任务
+App\Console\Kernel
+protected $commands = [
+	\App\Console\Commands\TestCommand::class,
+];
+
+protected function schedule(Schedule $schedule)
+{
+	//每分钟执行一次
+	/*
+	->cron('* * * * *');    在自定义Cron调度上运行任务
+	->everyMinute();    每分钟运行一次任务
+	->everyFiveMinutes();   每五分钟运行一次任务
+	->everyTenMinutes();    每十分钟运行一次任务
+	->everyThirtyMinutes(); 每三十分钟运行一次任务
+	->hourly(); 每小时运行一次任务
+	->daily();  每天凌晨零点运行任务
+	->dailyAt('13:00'); 每天13:00运行任务
+	->twiceDaily(1, 13);    每天1:00 & 13:00运行任务
+	->weekly(); 每周运行一次任务
+	->monthly();    每月运行一次任务
+	->monthlyOn(4, '15:00');    每月4号15:00运行一次任务
+	->quarterly();  每个季度运行一次
+	->yearly(); 每年运行一次
+	->timezone('America/New_York'); 设置时区
+	*/
+	$schedule->command('test:go')->everyMinute();
+}
+
+crontab设置
+* * * * * /usr/bin/php 项目/artisan schedule:run
+
+
+
+
+
+
+
+
+
+
+
+
+
+关于消息列队
+php artisan make:job TestQueue
+php artisan queue:table
+php artisan queue:failed-table
+php artisan migrate
+
+
+\App\Jobs\TestJob::dispatch("任务数据");
+
+//处理任务
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class TestJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+	protected $user_data;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($user_data)
+    {
+        $this->user_data = $user_data;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        //
+		\App\Model\User::saveData($this->user_data);
+		
+    }
+}
+//处理任务 end
+
+启动
+php artisan queue:work
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+关于主从读写的配置，其他数据库也是类似设置
+'sqlite' => [
+	'driver' => 'sqlite',
+	'prefix' => 't_',
+	'read' => [
+		[
+			'database' => database_path('db2.php'),
+		],
+		[
+			'database' => database_path('db3.php'),
+		]
+	],
+	'write' => [
+		[
+			'database' => database_path('db.php'),
+		]
+	]
+],
+
+
+
+
+
+

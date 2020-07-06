@@ -1,0 +1,1 @@
+webpackJsonp([0],{KKrt:function(r,t,e){"use strict";e.d(t,"a",function(){return n}),e.d(t,"b",function(){return o});var n={web_server_root:"/server/mgr/",web_root:"/mgr/",web_title:"laravel-ozgweb后台管理系统"},o={get_rest_param:function(r){for(var t=location.href.split("#"),e=(t=t[1]).split("/"),n=0;n<e.length;n++)if(e[n]==r){var o=n+1;return void 0!=e[o]?e[o]:null}return null}}}});
